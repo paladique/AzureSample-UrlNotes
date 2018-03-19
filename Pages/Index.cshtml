@@ -5,27 +5,27 @@
     ViewData["Title"] = "Home page";
 }
 
-@Html.DropDownListFor(x => @Model.CollectionName, new SelectList(@Model.Notes, "", ""), "Select Collection" , new { onchange = "SelectedIndexChanged()", id = "ddlCollection" })
 
-<a asp-action="Create">Add New</a>
-
+<input type="button"  value="Add New" onclick="$('#createForm').toggle()" />
 
 
-<div id="CreateForm">
-    <form asp-page-handler="Create" method="post" >
+<form asp-page-handler="Create" method="post">
+    @Html.DropDownListFor(x => x.CollectionName, new SelectList(@Model.Collections, "", ""), "Select Collection", new { onchange = "SelectedIndexChanged()", id = "ddlCollection" })
+
+    <div id="createForm" style="display:none">
 
         <label> Url:</label>
-        <input asp-for="NoteItem.Url"/>
+        <input asp-for="NoteItem.Url" />
         <label> Notes:</label>
 
         <input asp-for="NoteItem.Comments" />
         <label>Is this a tutorial? </label>
 
-        <input asp-for="NoteItem.Tutorial" type="checkbox"/>
-
+        <input asp-for="NoteItem.Tutorial" type="checkbox" />
         <input type="submit" value="Save" class="btn btn-default" />
-    </form>
-</div>
+    </div>
+
+</form>
 
 
 <table id="noteTable">
@@ -81,7 +81,7 @@
                             return editCommand;
                         },
                         delete: function (record) {
-                            var deleteCommand = "<a href =/Index/?handler=Delete&recordId=" + record.id.trim() + "&pVal=" + record.name + ">Delete</a>"
+                            var deleteCommand = "<a href =/Index/?handler=Delete&recordId=" + record.id.trim() + "&collection=" + select + "&pVal=" + record.name + ">Delete</a>"
                             return deleteCommand;
 
                         }

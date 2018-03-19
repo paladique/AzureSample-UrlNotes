@@ -14,7 +14,8 @@ namespace contextual_notes.Pages
 {
     public class IndexModel : PageModel
     {
-        public List<string> Notes { get; set; }
+        public List<string> Collections { get; set; }
+        [BindProperty]
         public string CollectionName { get; set; }
         [BindProperty]
         public Item NoteItem { get; set; }
@@ -27,13 +28,12 @@ namespace contextual_notes.Pages
 
         public async Task GetCollection()
         {
-
-            Notes = await DocumentDBRepository<object>.GetDBCollections();
+            Collections = await DocumentDBRepository<object>.GetDBCollections();
         }
 
-        public void OnGetDeleteAsync(int recordId, string pVal)
+        public void OnGetDeleteAsync(int recordId, string collection, string pVal)
         {
-            DocumentDBRepository<object>.DeleteDocument(recordId, pVal);
+            DocumentDBRepository<object>.DeleteDocument(recordId, collection, pVal);
             //return null;
         }
 
@@ -45,8 +45,7 @@ namespace contextual_notes.Pages
 
         public void OnPostCreate()
         {
-            var i = NoteItem;
-            CollectionName = "Videos";
+
             switch (CollectionName)
             {
                 case "Videos":
@@ -54,7 +53,7 @@ namespace contextual_notes.Pages
                     break;
 
                 case "Docs":
-                    DocumentDBRepository<Doc>.CreateDocument(null, CollectionName);
+                    DocumentDBRepository<Doc>.CreateDocument(new Doc(NoteItem), CollectionName);
                     break;
 
                 default:
@@ -70,12 +69,10 @@ namespace contextual_notes.Pages
             switch (selectedCollection)
             {
                 case "Videos":
-                    CollectionName = "Videos";
                     json = await DocumentDBRepository<Video>.GetAllDocsAsync(selectedCollection);
                     break;
 
                 case "Docs":
-                    CollectionName = "Docs";
                     json = await DocumentDBRepository<Doc>.GetAllDocsAsync(selectedCollection);
                     break;
 
@@ -91,6 +88,8 @@ namespace contextual_notes.Pages
 
     public class Item
     {
+        public string Collection { get; private set; }
+
         [JsonProperty(PropertyName = "url")]
         public string Url { get; set; }
         [JsonProperty(PropertyName = "comments")]
@@ -125,7 +124,18 @@ namespace contextual_notes.Pages
 
     public class Doc : Item
     {
+        internal Doc(Item i)
+        {
+            Id = i.Id;
+            Name = i.Name;
+            Url = i.Url;
+            Comments = i.Comments;
+            Tutorial = i.Tutorial;
+        }
 
+        [JsonConstructor]
+        public Doc()
+        { }
     }
 
 }

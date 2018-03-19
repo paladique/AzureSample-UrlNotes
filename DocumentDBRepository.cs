@@ -22,7 +22,7 @@ namespace contextual_notes
         {
             var c = GetConfiguration();
 
-            var client = new DocumentClient(new Uri(c["endpoint"]), c["authkey"]);
+            client = new DocumentClient(new Uri(c["endpoint"]), c["authkey"]);
             var q = client.CreateDocumentQuery<T>(UriFactory.CreateDocumentCollectionUri(c["database"], collection), new FeedOptions { MaxItemCount = -1, EnableCrossPartitionQuery = true })
                 .Select(f => f)
                 .AsDocumentQuery();
@@ -65,12 +65,12 @@ namespace contextual_notes
             await client.CreateDocumentAsync((UriFactory.CreateDocumentCollectionUri(c["database"], collectionName)), item);
         }
 
-        public static async void DeleteDocument(int id, string partitionValue)
+        public static async void DeleteDocument(int id, string collectionName, string partitionValue)
         {
             var c = GetConfiguration();
 
             var client = new DocumentClient(new Uri(c["endpoint"]), c["authkey"]);
-            await client.DeleteDocumentAsync(UriFactory.CreateDocumentUri(c["database"], "Videos", id.ToString()), new RequestOptions { PartitionKey = new PartitionKey(partitionValue) });
+            await client.DeleteDocumentAsync(UriFactory.CreateDocumentUri(c["database"], collectionName, id.ToString()), new RequestOptions { PartitionKey = new PartitionKey(partitionValue) });
 
         }
 
