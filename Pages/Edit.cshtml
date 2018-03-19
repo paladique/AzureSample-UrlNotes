@@ -1,0 +1,19 @@
+﻿@page "{handler?}/{id:int?}"
+@model EditModel
+@{
+}
+
+<h1>Edit</h1>
+<form asp-route="Save" method="post">
+    <div>
+        <label asp-for="ItemToEdit.Comments"></label>
+        <div>
+            <input asp-for="ItemToEdit.Comments" />
+            <input asp-for="ItemToEdit.Tutorial"/>
+        </div>
+    </div>
+
+    <div>
+        <button type="submit">Save</button>
+    </div>
+</form>

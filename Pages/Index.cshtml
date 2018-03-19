@@ -1,0 +1,103 @@
+﻿@page
+
+@model contextual_notes.Pages.IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+@Html.DropDownListFor(x => @Model.CollectionName, new SelectList(@Model.Notes, "", ""), "Select Collection" , new { onchange = "SelectedIndexChanged()", id = "ddlCollection" })
+
+<a asp-action="Create">Add New</a>
+
+
+
+<div id="CreateForm">
+    <form asp-page-handler="Create" method="post" >
+
+        <label> Url:</label>
+        <input asp-for="NoteItem.Url"/>
+        <label> Notes:</label>
+
+        <input asp-for="NoteItem.Comments" />
+        <label>Is this a tutorial? </label>
+
+        <input asp-for="NoteItem.Tutorial" type="checkbox"/>
+
+        <input type="submit" value="Save" class="btn btn-default" />
+    </form>
+</div>
+
+
+<table id="noteTable">
+    <thead>
+        <tr>
+            <th>Edit</th>
+            <th>Delete</th>
+
+        </tr>
+    </thead>
+</table>
+
+<form>
+    <input name="__RequestVerificationToken" type="hidden" value="CfDJ8KW5cuB058RCnNyZSLI7AUjUAtTwe54jQ4Z9Goyn3WKPcpVFYSFUM5J-JDFC3E-MZIUcyR0UnbrvrC_sHv6MbUONStuIMhqDc7i00pQiGkrzf3hK6t5gZFVrjUpyAcargow4zvKU_ISjdPfoLTNF588" />
+</form>
+
+
+
+<script type="text/javascript">
+
+    function SelectedIndexChanged() {
+
+        var select = $("#ddlCollection option:selected").text();
+
+        $.ajax({
+            type: "GET",
+            url: "/Index/?handler=List&selectedCollection=" + select,
+            contentType: "application/json",
+            dataType: "json",
+            success: function (response) {
+
+                //console.log(response);
+                var head = $('#noteTable > thead tr');
+                var table = $('#noteTable');
+                var fields = JSON.parse(response);
+                var tr = $('<tr></tr>');
+
+                for (x in fields[0]) {
+                    head.append('<th>' + x + '</th>');
+                }
+
+
+                table.dynatable({
+                    features: {
+                        paginate: false,
+                        search: false,
+                        recordCount: false
+                    },
+                    bodyRowSelector: 'tr',
+                    writers: {
+                        edit: function (record) {
+                            var editCommand = "<a href = Edit/" + record.id + "/" + select + ">Edit</a>"
+                            return editCommand;
+                        },
+                        delete: function (record) {
+                            var deleteCommand = "<a href =/Index/?handler=Delete&recordId=" + record.id.trim() + "&pVal=" + record.name + ">Delete</a>"
+                            return deleteCommand;
+
+                        }
+                    },
+                    dataset: {
+                        records: fields
+                    }
+                });
+
+            },
+            failure: function (response) {
+                //alert(response);
+            }
+        });
+    }
+
+
+
+</script>  
