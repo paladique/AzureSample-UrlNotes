@@ -6,8 +6,7 @@
 }
 
 
-<input type="button"  value="Add New" onclick="$('#createForm').toggle()" />
-
+<input type="button"  value="Add New" onclick="$('#createForm').toggle()" id="AddBtn"/>
 
 <form asp-page-handler="Create" method="post">
     @Html.DropDownListFor(x => x.CollectionName, new SelectList(@Model.Collections, "", ""), "Select Collection", new { onchange = "SelectedIndexChanged()", id = "ddlCollection" })
@@ -47,9 +46,9 @@
 <script type="text/javascript">
 
     function SelectedIndexChanged() {
-
+         
         var select = $("#ddlCollection option:selected").text();
-
+  
         $.ajax({
             type: "GET",
             url: "/Index/?handler=List&selectedCollection=" + select,
@@ -77,11 +76,11 @@
                     bodyRowSelector: 'tr',
                     writers: {
                         edit: function (record) {
-                            var editCommand = "<a href = Edit/" + record.id + "/" + select + ">Edit</a>"
+                            var editCommand = "<a href=Edit/" + select + "/" + record.id + ">Edit</a>"
                             return editCommand;
                         },
                         delete: function (record) {
-                            var deleteCommand = "<a href =/Index/?handler=Delete&recordId=" + record.id.trim() + "&collection=" + select + "&pVal=" + record.name + ">Delete</a>"
+                            var deleteCommand = "<a href=/Index/?handler=Delete&recordId=" + record.id.trim() + "&collection=" + select + ">Delete</a>"
                             return deleteCommand;
 
                         }

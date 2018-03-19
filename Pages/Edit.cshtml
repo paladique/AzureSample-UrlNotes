@@ -1,16 +1,21 @@
-﻿@page "{handler?}/{id:int?}"
+﻿@page "{collection?}/{id:int?}"
 @model EditModel
 @{
 }
 
 <h1>Edit</h1>
-<form asp-route="Save" method="post">
+<form asp-page-handler="Save" method="post">
     <div>
-        <label asp-for="ItemToEdit.Comments"></label>
-        <div>
-            <input asp-for="ItemToEdit.Comments" />
-            <input asp-for="ItemToEdit.Tutorial"/>
-        </div>
+        <h1>Editing: <label asp-for="ItemToEdit.Name"></label></h1>
+
+        <label>Comments</label>
+        <input asp-for="ItemToEdit.Comments" />
+        <label>Is this a Tutotial?</label>
+        <input asp-for="ItemToEdit.Tutorial" />
+        <input asp-for="ItemToEdit.Id" type="hidden" />
+        <input asp-for="Collection" type="hidden" />
+        <input asp-for="ItemToEdit.Name" type="hidden" />
+
     </div>
 
     <div>

@@ -10,23 +10,21 @@ namespace contextual_notes.Pages
 {
     public class EditModel : PageModel
     {
+        [BindProperty]
         public Item ItemToEdit { get; set; }
+        [BindProperty]
+        public string Collection { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(int id, string collection)
+        public void OnGet(int id, string collection)
         {
-            //todo:replace testing hardcording
-            //todo:how do you configure additional param in route?
-           var item = DocumentDBRepository<object>.GetDocument(id,"Videos");
-            ItemToEdit = new Item { Comments = item.Comments, Tutorial = item.Tutorial};
-            
-            return Page();
+           var item = DocumentDBRepository<object>.GetDocument(id, collection);
+           ItemToEdit = new Item { Id = item.Id, Comments = item.Comments, Tutorial = item.Tutorial};
+           Collection = collection;
         }
 
         public void OnPostSave()
         {
-            var x = ItemToEdit;
-            DocumentDBRepository<Video>.EditDocument(Convert.ToInt32(x.Id), x.Id, "Videos");//x.i;
-            //return null;
+            DocumentDBRepository<Item>.EditDocument(ItemToEdit, ItemToEdit.Id,Collection);
         }
     }
 }

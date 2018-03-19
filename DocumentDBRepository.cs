@@ -54,7 +54,6 @@ namespace contextual_notes
             }
 
             return collectionNames.ToList<string>();
-
         }
 
         public static async void CreateDocument(T item, string collectionName)
@@ -65,16 +64,17 @@ namespace contextual_notes
             await client.CreateDocumentAsync((UriFactory.CreateDocumentCollectionUri(c["database"], collectionName)), item);
         }
 
-        public static async void DeleteDocument(int id, string collectionName, string partitionValue)
+        public static async void DeleteDocument(int id, string collectionName)
         {
             var c = GetConfiguration();
-
             var client = new DocumentClient(new Uri(c["endpoint"]), c["authkey"]);
-            await client.DeleteDocumentAsync(UriFactory.CreateDocumentUri(c["database"], collectionName, id.ToString()), new RequestOptions { PartitionKey = new PartitionKey(partitionValue) });
 
+            var doc = GetDocument(id, collectionName);
+
+            await client.DeleteDocumentAsync(UriFactory.CreateDocumentUri(c["database"], collectionName, id.ToString()), new RequestOptions { PartitionKey = new PartitionKey(doc.Name) });
         }
 
-        public static async void EditDocument(int id, string partitionValue, string collectionName)
+        public static async void EditDocument(Item item, string id, string collectionName)
         {
             var c = GetConfiguration();
 
@@ -85,10 +85,11 @@ namespace contextual_notes
                                         .AsEnumerable()
                                         .SingleOrDefault();
 
-            //todo:remove cardcoded testing
-            doc.SetPropertyValue("comments", "updated comments");
+            doc.SetPropertyValue("comments", item.Comments);
+            doc.SetPropertyValue("tutorial", item.Tutorial);
 
-            Document updated = await client.ReplaceDocumentAsync(doc, new RequestOptions { PartitionKey = new PartitionKey(partitionValue) });
+
+            Document updated = await client.ReplaceDocumentAsync(doc, new RequestOptions { PartitionKey = new PartitionKey(doc.GetPropertyValue<string>("name")) });
         }
 
         public static Item GetDocument(int id, string collectionName)
@@ -101,7 +102,6 @@ namespace contextual_notes
                                         .Where(r => r.Id == id.ToString())
                                         .AsEnumerable()
                                         .SingleOrDefault();
-
             return doc;
         }
 

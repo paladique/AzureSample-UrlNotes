@@ -31,19 +31,15 @@ namespace contextual_notes.Pages
             Collections = await DocumentDBRepository<object>.GetDBCollections();
         }
 
-        public void OnGetDeleteAsync(int recordId, string collection, string pVal)
+        public IActionResult OnGetDeleteAsync(int recordId, string collection)
         {
-            DocumentDBRepository<object>.DeleteDocument(recordId, collection, pVal);
-            //return null;
+            DocumentDBRepository<object>.DeleteDocument(recordId, collection);
+            GetCollection().Wait();
+
+            return Page();
         }
 
-        public void OnPostUpdate(int recordId, string pVal)
-        {
-            DocumentDBRepository<object>.EditDocument(recordId, pVal, CollectionName);
-            //return null;
-        }
-
-        public void OnPostCreate()
+        public IActionResult OnPostCreate()
         {
 
             switch (CollectionName)
@@ -60,6 +56,7 @@ namespace contextual_notes.Pages
                     break;
             }
 
+            return Page();
         }
 
         public async Task<JsonResult> OnGetListAsync(string selectedCollection)
@@ -88,8 +85,6 @@ namespace contextual_notes.Pages
 
     public class Item
     {
-        public string Collection { get; private set; }
-
         [JsonProperty(PropertyName = "url")]
         public string Url { get; set; }
         [JsonProperty(PropertyName = "comments")]
