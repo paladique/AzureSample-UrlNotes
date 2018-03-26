@@ -25,6 +25,7 @@ namespace contextual_notes.Pages
         public void OnPostSave()
         {
             DocumentDBRepository<Item>.EditDocument(ItemToEdit, ItemToEdit.Id,Collection);
+            Redirect("./Index");
         }
     }
 }

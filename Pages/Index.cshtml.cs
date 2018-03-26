@@ -41,6 +41,7 @@ namespace contextual_notes.Pages
 
         public IActionResult OnPostCreate()
         {
+            NoteItem.Name = Utils.Unfurl(NoteItem.Url);
 
             switch (CollectionName)
             {
@@ -93,7 +94,6 @@ namespace contextual_notes.Pages
         public bool Tutorial { get; set; }
         [JsonProperty(PropertyName = "id")]
         public string Id { get; set; }
-
         [JsonProperty(PropertyName = "name")]
         public string Name { get; set; }
     }

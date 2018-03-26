@@ -14,8 +14,6 @@ using System.IO;
 namespace contextual_notes
 {    public static class DocumentDBRepository<T> where T : class
     {
-
-
         private static DocumentClient client;
 
         public static async Task<string> GetAllDocsAsync(string collection)
@@ -61,6 +59,7 @@ namespace contextual_notes
             var c = GetConfiguration();
 
             var client = new DocumentClient(new Uri(c["endpoint"]), c["authkey"]);
+
             await client.CreateDocumentAsync((UriFactory.CreateDocumentCollectionUri(c["database"], collectionName)), item);
         }
 
