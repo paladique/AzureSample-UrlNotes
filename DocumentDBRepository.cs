@@ -57,9 +57,7 @@ namespace contextual_notes
         public static async void CreateDocument(T item, string collectionName)
         {
             var c = GetConfiguration();
-
             var client = new DocumentClient(new Uri(c["endpoint"]), c["authkey"]);
-
             await client.CreateDocumentAsync((UriFactory.CreateDocumentCollectionUri(c["database"], collectionName)), item);
         }
 
@@ -94,7 +92,6 @@ namespace contextual_notes
         public static Item GetDocument(int id, string collectionName)
         {
             var c = GetConfiguration();
-
             var client = new DocumentClient(new Uri(c["endpoint"]), c["authkey"]);
 
             Item doc = client.CreateDocumentQuery<Item>(UriFactory.CreateDocumentCollectionUri(c["database"], collectionName), new FeedOptions { EnableCrossPartitionQuery = true })

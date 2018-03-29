@@ -41,7 +41,7 @@ namespace contextual_notes.Pages
 
         public IActionResult OnPostCreate()
         {
-            NoteItem.Name = Utils.Unfurl(NoteItem.Url);
+            NoteItem.Name = Utils.Unfurl(NoteItem.Url.ToString());
 
             switch (CollectionName)
             {
@@ -87,7 +87,7 @@ namespace contextual_notes.Pages
     public class Item
     {
         [JsonProperty(PropertyName = "url")]
-        public string Url { get; set; }
+        public Uri Url { get; set; }
         [JsonProperty(PropertyName = "comments")]
         public string Comments { get; set; }
         [JsonProperty(PropertyName = "tutorial")]
@@ -96,7 +96,21 @@ namespace contextual_notes.Pages
         public string Id { get; set; }
         [JsonProperty(PropertyName = "name")]
         public string Name { get; set; }
+        [JsonProperty(PropertyName = "keywords")]
+        public List<Keyword> Keywords { get; set; }
     }
+
+    public class Keyword
+    {
+        public string name;
+    }
+
+    //more types than just strings
+    //ie:comments (date, author)
+    //vote (int)
+    //image 
+    //aim at channel 9 tag - see if possible
+    //Search
 
     public class Video : Item
     {
@@ -107,6 +121,7 @@ namespace contextual_notes.Pages
             Url = i.Url;
             Comments = i.Comments;
             Tutorial = i.Tutorial;
+            Keywords = i.Keywords;
         }
 
         [JsonConstructor]
@@ -115,6 +130,8 @@ namespace contextual_notes.Pages
 
         [JsonProperty(PropertyName = "length")]
         public int Length { get; set; }
+        public int CommentCount { get; set; }
+        public Uri Screencap { get; set; }
     }
 
     public class Doc : Item
@@ -126,6 +143,7 @@ namespace contextual_notes.Pages
             Url = i.Url;
             Comments = i.Comments;
             Tutorial = i.Tutorial;
+            Keywords = i.Keywords;
         }
 
         [JsonConstructor]

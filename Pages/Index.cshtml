@@ -29,11 +29,7 @@
 
 <table id="noteTable">
     <thead>
-        <tr>
-            <th>Edit</th>
-            <th>Delete</th>
 
-        </tr>
     </thead>
 </table>
 
@@ -55,18 +51,26 @@
             contentType: "application/json",
             dataType: "json",
             success: function (response) {
+                $('th').remove();
+                $('tr').remove();
 
-                //console.log(response);
+                var staticFields = ["Edit", "Delete"];
+                var tr = $('<tr></tr>');
+                $('#noteTable > thead').append(tr);
                 var head = $('#noteTable > thead tr');
                 var table = $('#noteTable');
                 var fields = JSON.parse(response);
-                var tr = $('<tr></tr>');
+
+
+                for (x in staticFields) {
+                    head.append('<th>' + staticFields[x] + '</th>');
+                }
 
                 for (x in fields[0]) {
                     head.append('<th>' + x + '</th>');
                 }
 
-
+            
                 table.dynatable({
                     features: {
                         paginate: false,
@@ -90,9 +94,10 @@
                     }
                 });
 
+                table.data('dynatable').dom.update();
             },
             failure: function (response) {
-                //alert(response);
+                alert(response);
             }
         });
     }
