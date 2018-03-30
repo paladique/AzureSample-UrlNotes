@@ -12,7 +12,8 @@ using Microsoft.Extensions.Configuration;
 using System.IO;
 
 namespace contextual_notes
-{    public static class DocumentDBRepository<T> where T : class
+{
+    public static class DocumentDBRepository<T> where T : class
     {
         private static DocumentClient client;
 
@@ -30,7 +31,7 @@ namespace contextual_notes
             {
                 results.AddRange(await q.ExecuteNextAsync<T>());
             }
-            
+
             return JsonConvert.SerializeObject(results);
         }
 
@@ -43,7 +44,7 @@ namespace contextual_notes
                 var client = new DocumentClient(new Uri(c["endpoint"]), c["authkey"]);
                 var colls = await client.ReadDocumentCollectionFeedAsync(UriFactory.CreateDatabaseUri(c["database"]));
                 collectionNames = from x in colls
-                                      select x.Id;
+                                  select x.Id;
             }
             catch (Exception ex)
             {
@@ -68,22 +69,26 @@ namespace contextual_notes
             var client = new DocumentClient(new Uri(c["endpoint"]), c["authkey"]);
             FeedOptions queryOptions = new FeedOptions { MaxItemCount = -1, EnableCrossPartitionQuery = true };
 
-            
+            var terms = searchTerms.Split(' ');
+            var secondClause = string.Format(" OR CONTAINS({0}.{1}, @{1})", collectionName, terms[1].ToLower());
 
-           var q = new SqlQuerySpec
+            var q = new SqlQuerySpec
             {
-                QueryText = "SELECT * FROM " + collectionName + " WHERE CONTAINS( " + collectionName + ".name, @name)",
+                QueryText = string.Format("SELECT * FROM {0} WHERE CONTAINS({0}.{1}, @{1})", collectionName, terms[0].ToLower()),
                 Parameters = new SqlParameterCollection()
                 {
-                    new SqlParameter("@name", searchText)
+                    new SqlParameter("@" + terms[0].ToLower(), searchText)
 
                 }
             };
 
+            if (!string.IsNullOrEmpty(terms[1]))
+            {
+                q.Parameters.Add(new SqlParameter("@" + terms[1], searchText));
+                q.QueryText += secondClause;
+            }
 
-            //var q = "SELECT * FROM " + collectionName + " WHERE " + collectionName + ".Name='" + searchText +"'";
-
-            List< Item> queryResult = (client.CreateDocumentQuery<Item>(
+            List<Item> queryResult = (client.CreateDocumentQuery<Item>(
                      UriFactory.CreateDocumentCollectionUri(c["database"], collectionName),
                      q,
                      queryOptions)).ToList();
@@ -97,7 +102,6 @@ namespace contextual_notes
             var client = new DocumentClient(new Uri(c["endpoint"]), c["authkey"]);
 
             var doc = GetDocument(id, collectionName);
-
             await client.DeleteDocumentAsync(UriFactory.CreateDocumentUri(c["database"], collectionName, id.ToString()), new RequestOptions { PartitionKey = new PartitionKey(doc.Name) });
         }
 
@@ -155,4 +159,4 @@ namespace contextual_notes
             return connStrings;
         }
     }
-    }
+}

@@ -1,4 +1,9 @@
-﻿function JSONTable(tableObject) {
+﻿$(document).ready(function () {
+    loadTable();
+});
+
+
+function JSONTable(tableObject) {
     this.table = tableObject
 
     this.toJSON = function () {

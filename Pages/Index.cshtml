@@ -8,7 +8,7 @@
 
 
 <form asp-page-handler="Create" method="post">
-    @Html.DropDownListFor(x => x.CollectionName, new SelectList(@Model.Collections, "", ""), "Select Collection", new { onchange = "SelectedIndexChanged()", id = "ddlCollection" })
+    @Html.DropDownListFor(x => x.CollectionName, new SelectList(@Model.Collections, "", ""), "Select Collection", new { onchange = "loadTable()", id = "ddlCollection" })
 
     <div id="createForm" style="display:none">
 
@@ -28,7 +28,7 @@
 <input type="button" value="Add New" onclick="$('#createForm').toggle()" id="AddBtn" style="display:none" /> <br />
 
 
-    Searching by: <div id="searchBy" name=" searchTerms"></div><br />
+ Searching by (Select up to 2): <div id="searchBy" name="searchTerms"></div><br />
 <input type="text" value="Search" id="queryText" />
 
 <input type="button" value="Search" id="searchBtn" onclick="search()" style="display:none" /><br />
@@ -51,7 +51,7 @@
 
 <script type="text/javascript">
 
-    function SelectedIndexChanged() {
+    function loadTable() {
         var select = $("#ddlCollection option:selected").text();
         $("#AddBtn").show();
         $("#searchBtn").show();
@@ -109,17 +109,16 @@
     }
 
     function addToQuery(item) {
-        $(item).toggleClass("badge-success")
 
-        if ($(item).hasClass("badge-success")) {
-            $("#searchBy").append($(item).text() + "  ")
-
+        if ($("span.badge-success").length < 2 && !$(item).hasClass("badge-success"))
+        {
+            $(item).toggleClass("badge-success")
+            $("#searchBy").append($(item).text() + " ")
         }
-        else {
-
-            //console.log($("#searchBy").text());
-            $("#searchBy").text($(this).text().replace($(item).text() + "  ", ""))
-
+        else
+        {
+            $(item).hasClass("badge-success").toggleClass("badge-success")
+            $("#searchBy").text($(this).text().replace($(item).text() + " ", ""))
         }
 
     }

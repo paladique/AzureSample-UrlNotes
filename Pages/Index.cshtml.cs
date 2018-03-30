@@ -12,10 +12,9 @@ namespace contextual_notes.Pages
         [BindProperty]
         public List<string> Collections { get; set; }
         [BindProperty]
-        public string CollectionName { get; set; }
+        public string CollectionName { get; set; } = "Videos";
         [BindProperty]
         public Item NoteItem { get; set; }
-        //public string SearchTerms
 
 
         public void OnGet()
@@ -147,8 +146,6 @@ namespace contextual_notes.Pages
         public Video()
         { }
 
-        [JsonProperty(PropertyName = "Length")]
-        public int Length { get; set; }
         [JsonProperty(PropertyName = "Comment_Count")]
         public int CommentCount { get; set; }
         [JsonProperty(PropertyName = "Screencap")]
