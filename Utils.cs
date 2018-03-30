@@ -7,13 +7,13 @@ namespace contextual_notes
 {
     public class Utils
     {
-        public static string Unfurl<T>(ref T item,string url) where T:Item
+        public static void Unfurl<T>(ref T item,string url) where T:Item
         {
 
             try
             {
                 string src = string.Empty;
-                HtmlDocument doc;
+                var doc = new HtmlDocument();
                 try
                 {
                     var h = new HtmlWeb();
@@ -21,7 +21,6 @@ namespace contextual_notes
                 }
                 catch
                 {
-                    return "cannot connect";
                 }
 
                 var metaTags = doc.DocumentNode.SelectNodes("//meta");
@@ -48,19 +47,17 @@ namespace contextual_notes
                     i.CommentCount = int.TryParse(comments, out count) ? count : 0;
 
                     var img = (from x in metaTags
-                               where (x.Attributes["property"] != null && x.Attributes["property"].Value == "og:title")
+                               where (x.Attributes["property"] != null && x.Attributes["property"].Value == "og:image")
                                select x).FirstOrDefault().Attributes["content"].Value;
                     i.Screencap = new Uri(img);
                 }
                 
-
-                return "";
             }
 
 
             catch
             {
-                return "null";
+                
             }
             
         }

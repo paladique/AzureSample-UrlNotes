@@ -32,7 +32,7 @@
     }
 
     this.fromJSON = function (jsonSourceData = this.tableJSON, selectedCollection, setFullJSON = true) {
-        if (jsonSourceData.length == 0) {
+        if (jsonSourceData.length === 0) {
             this.clearTable()
             return
         }
@@ -44,8 +44,7 @@
         tableHeaderKeys = Object.keys(jsonSourceData[0])
         tableHeaderKeys.unshift("Edit", "Delete")
 
-        for (var kc = 0; kc < tableHeaderKeys.length; kc++)
-        {
+        for (var kc = 0; kc < tableHeaderKeys.length; kc++) {
             tableHeaderKeyArray.push(tableHeaderKeys[kc])
             $(rootHeaderRow).append('<th>' + tableHeaderKeys[kc] + '</th>')
         }
@@ -56,32 +55,32 @@
 
             for (var ki = 0; ki < tableHeaderKeyArray.length; ki++) {
 
-                switch (tableHeaderKeyArray[ki])
-                {
-                    case "name":
-                        tableDataRow.append("<td><a href=" + jsonSourceData[jr]['url'] + ">" + jsonSourceData[jr]['name'] + "</a>")
+                switch (tableHeaderKeyArray[ki]) {
+                    case "Name":
+                        tableDataRow.append("<td><a href=" + jsonSourceData[jr]['Url'] + ">" + jsonSourceData[jr]['Name'] + "</a>")
                         break;
                     case "Edit":
-                        console.log(tableHeaderKeyArray[ki])
-                        tableDataRow.append("<td><a href=Edit/" + selectedCollection + "/" + jsonSourceData[jr]['id'] + ">Edit</a>")
+                        tableDataRow.append("<td><a href=Edit/" + selectedCollection + "/" + jsonSourceData[jr]['Id'] + ">Edit</a>")
                         break;
                     case "Delete":
-                        tableDataRow.append("<td><a href=/Index/?handler=Delete&recordId=" + jsonSourceData[jr]['id'] + "&collection=" + selectedCollection +">Delete</a>")
+                        tableDataRow.append("<td><a href=/Index/?handler=Delete&recordId=" + jsonSourceData[jr]['Id'] + "&collection=" + selectedCollection + ">Delete</a>")
                         break;
-                    case "keywords":
+                    case "Keywords":
                         var words = "";
                         for (x in jsonSourceData[jr][tableHeaderKeyArray[ki]]) {
 
-                            console.log(jsonSourceData[jr][tableHeaderKeyArray[ki]][x].name)
                             words += jsonSourceData[jr][tableHeaderKeyArray[ki]][x].name + "<br>"
                         }
                         tableDataRow.append("<td>" + words)
                         break;
-
+                    case "Screencap":
+                        tableDataRow.append("<td><img src=" + jsonSourceData[jr][tableHeaderKeyArray[ki]] + "/>")
+                        break;
                     default:
                         tableDataRow.append('<td>' + jsonSourceData[jr][tableHeaderKeyArray[ki]])
                 }
             }
+
             rootTableObject.find("tbody").append(tableDataRow)
         }
         this.table.html(rootTableObject[0].innerHTML)
@@ -89,6 +88,9 @@
         if (setFullJSON) {
             this.tableFullJSON = jsonSourceData
         }
+
+        return tableHeaderKeyArray
+
     }
 
     this.limitJSON = function (page = 0, limit = 25, updateTableDirectly = false, inputJSON = this.tableJSON) {
@@ -101,6 +103,7 @@
         searchQuery = searchQuery.toLowerCase()
         sourceTableJSON = this.tableFullJSON
         sourceTableJSONLength = sourceTableJSON.length
+        sourceTableKeys = Object.keys(sourceTableJSON[0])
         sourceTableKeys = Object.keys(sourceTableJSON[0])
         sourceTableKeysLength = sourceTableKeys.length
         searchQuerySplit = searchQuery.split(" ")

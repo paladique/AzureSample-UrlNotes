@@ -61,6 +61,36 @@ namespace contextual_notes
             await client.CreateDocumentAsync((UriFactory.CreateDocumentCollectionUri(c["database"], collectionName)), item);
         }
 
+        public static string Search(T item, string collectionName, string searchTerms, string searchText)
+        {
+
+            var c = GetConfiguration();
+            var client = new DocumentClient(new Uri(c["endpoint"]), c["authkey"]);
+            FeedOptions queryOptions = new FeedOptions { MaxItemCount = -1, EnableCrossPartitionQuery = true };
+
+            
+
+           var q = new SqlQuerySpec
+            {
+                QueryText = "SELECT * FROM " + collectionName + " WHERE CONTAINS( " + collectionName + ".name, @name)",
+                Parameters = new SqlParameterCollection()
+                {
+                    new SqlParameter("@name", searchText)
+
+                }
+            };
+
+
+            //var q = "SELECT * FROM " + collectionName + " WHERE " + collectionName + ".Name='" + searchText +"'";
+
+            List< Item> queryResult = (client.CreateDocumentQuery<Item>(
+                     UriFactory.CreateDocumentCollectionUri(c["database"], collectionName),
+                     q,
+                     queryOptions)).ToList();
+
+            return JsonConvert.SerializeObject(queryResult);
+        }
+
         public static async void DeleteDocument(string id, string collectionName)
         {
             var c = GetConfiguration();
@@ -115,11 +145,12 @@ namespace contextual_notes
             builder = builder.AddEnvironmentVariables();
             var config = builder.Build();
 
-            var connStrings = new Dictionary<string, string>();
-
-            connStrings.Add("database", config.GetConnectionString("database"));
-            connStrings.Add("authkey", config.GetConnectionString("authkey"));
-            connStrings.Add("endpoint", config.GetConnectionString("endpoint"));
+            var connStrings = new Dictionary<string, string>
+            {
+                { "database", config.GetConnectionString("database") },
+                { "authkey", config.GetConnectionString("authkey") },
+                { "endpoint", config.GetConnectionString("endpoint") }
+            };
 
             return connStrings;
         }

@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Azure.Documents;
-using Microsoft.Azure.Documents.Client;
-using Microsoft.Azure.Documents.Linq;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace contextual_notes.Pages
 {
@@ -20,6 +15,7 @@ namespace contextual_notes.Pages
         public string CollectionName { get; set; }
         [BindProperty]
         public Item NoteItem { get; set; }
+        //public string SearchTerms
 
 
         public void OnGet()
@@ -66,6 +62,29 @@ namespace contextual_notes.Pages
             return Page();
         }
 
+        [HttpPost]
+        public IActionResult OnPostSearch(string selectedCollection, string searchTerms, string searchText)
+        {
+            string json = null;
+            switch (selectedCollection)
+            {
+
+                case "Videos":
+                    json = DocumentDBRepository<Video>.Search(new Video(NoteItem), selectedCollection, searchTerms, searchText);
+                    break;
+
+                case "Docs":
+                    json = DocumentDBRepository<Doc>.Search(new Doc(NoteItem), selectedCollection, searchTerms, searchText);
+                    break;
+
+                default:
+                    json = null;
+                    break;
+            }
+
+            return new JsonResult(json);
+        }
+
         public async Task<JsonResult> OnGetListAsync(string selectedCollection)
         {
             string json;
@@ -92,17 +111,17 @@ namespace contextual_notes.Pages
 
     public class Item
     {
-        [JsonProperty(PropertyName = "url")]
+        [JsonProperty(PropertyName = "Url")]
         public Uri Url { get; set; }
-        [JsonProperty(PropertyName = "comments")]
+        [JsonProperty(PropertyName = "Comments")]
         public string Comments { get; set; }
-        [JsonProperty(PropertyName = "tutorial")]
+        [JsonProperty(PropertyName = "Tutorial")]
         public bool Tutorial { get; set; }
-        [JsonProperty(PropertyName = "id")]
+        [JsonProperty(PropertyName = "ID")]
         public string Id { get; set; }
-        [JsonProperty(PropertyName = "name")]
+        [JsonProperty(PropertyName = "Name")]
         public string Name { get; set; }
-        [JsonProperty(PropertyName = "keywords")]
+        [JsonProperty(PropertyName = "Keywords")]
         public List<Keyword> Keywords { get; set; }
     }
 
@@ -128,11 +147,11 @@ namespace contextual_notes.Pages
         public Video()
         { }
 
-        [JsonProperty(PropertyName = "length")]
+        [JsonProperty(PropertyName = "Length")]
         public int Length { get; set; }
-        [JsonProperty(PropertyName = "commentCount")]
+        [JsonProperty(PropertyName = "Comment_Count")]
         public int CommentCount { get; set; }
-        [JsonProperty(PropertyName = "screencap")]
+        [JsonProperty(PropertyName = "Screencap")]
         public Uri Screencap { get; set; }
     }
 
