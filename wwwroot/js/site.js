@@ -79,7 +79,7 @@ function JSONTable(tableObject) {
                         tableDataRow.append("<td>" + words)
                         break;
                     case "Screencap":
-                        tableDataRow.append("<td><img src=" + jsonSourceData[jr][tableHeaderKeyArray[ki]] + "/>")
+                        tableDataRow.append("<td><img src='" + jsonSourceData[jr][tableHeaderKeyArray[ki]] + "'/>")
                         break;
                     default:
                         tableDataRow.append('<td>' + jsonSourceData[jr][tableHeaderKeyArray[ki]])
