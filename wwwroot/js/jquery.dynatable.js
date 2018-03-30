@@ -345,11 +345,17 @@
 
     // update table contents with new records array
     // from query (whether ajax or not)
-    this.update = function() {
+      this.update = function () {
+          //var $columns = obj.$element.find(settings.table.headRowSelector).children('th,td');
+          //if ($columns.length) {
+          //    $columns.each(function (index) {
+          //        _this.add($(this), index, true);
+          //    });
       var rows = '',
           columns = settings.table.columns,
           rowWriter = settings.writers._rowWriter,
           cellWriter = settings.writers._cellWriter;
+
 
       obj.$element.trigger('dynatable:beforeUpdate', rows);
 
@@ -357,7 +363,7 @@
       for (var i = 0, len = settings.dataset.records.length; i < len; i++) {
         var record = settings.dataset.records[i],
             tr = rowWriter(i, record, columns, cellWriter);
-        rows += tr;
+          rows += tr;
       }
 
       // Appended dynatable interactive elements
@@ -409,6 +415,7 @@
       obj.$element.append(rows);
 
       obj.$element.trigger('dynatable:afterUpdate', rows);
+
     };
   };
 

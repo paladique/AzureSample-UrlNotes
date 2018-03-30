@@ -6,7 +6,14 @@
 }
 
 
-<input type="button"  value="Add New" onclick="$('#createForm').toggle()" id="AddBtn"/>
+<input type="button" value="Add New" onclick="$('#createForm').toggle()" id="AddBtn" />
+
+@if (!string.IsNullOrEmpty(Model.CollectionName))
+{
+    <script type="text/javascript">
+            SelectedIndexChanged();
+    </script>
+}
 
 <form asp-page-handler="Create" method="post">
     @Html.DropDownListFor(x => x.CollectionName, new SelectList(@Model.Collections, "", ""), "Select Collection", new { onchange = "SelectedIndexChanged()", id = "ddlCollection" })
@@ -27,7 +34,7 @@
 </form>
 
 
-<table id="noteTable">
+<table id="noteTable" class="table table-striped">
     <thead>
 
     </thead>
@@ -42,66 +49,23 @@
 <script type="text/javascript">
 
     function SelectedIndexChanged() {
-         
         var select = $("#ddlCollection option:selected").text();
-  
+
         $.ajax({
             type: "GET",
             url: "/Index/?handler=List&selectedCollection=" + select,
             contentType: "application/json",
             dataType: "json",
             success: function (response) {
-                $('th').remove();
-                $('tr').remove();
 
-                var staticFields = ["Edit", "Delete"];
-                var tr = $('<tr></tr>');
-                $('#noteTable > thead').append(tr);
-                var head = $('#noteTable > thead tr');
-                var table = $('#noteTable');
-                var fields = JSON.parse(response);
+                var jsonTable = new JSONTable($("#noteTable"))
+                var tableData = jsonTable.fromJSON(JSON.parse(response), select)
 
-
-                for (x in staticFields) {
-                    head.append('<th>' + staticFields[x] + '</th>');
-                }
-
-                for (x in fields[0]) {
-                    head.append('<th>' + x + '</th>');
-                }
-
-            
-                table.dynatable({
-                    features: {
-                        paginate: false,
-                        search: false,
-                        recordCount: false
-                    },
-                    bodyRowSelector: 'tr',
-                    writers: {
-                        edit: function (record) {
-                            var editCommand = "<a href=Edit/" + select + "/" + record.id + ">Edit</a>"
-                            return editCommand;
-                        },
-                        delete: function (record) {
-                            var deleteCommand = "<a href=/Index/?handler=Delete&recordId=" + record.id.trim() + "&collection=" + select + ">Delete</a>"
-                            return deleteCommand;
-
-                        }
-                    },
-                    dataset: {
-                        records: fields
-                    }
-                });
-
-                table.data('dynatable').dom.update();
             },
             failure: function (response) {
                 alert(response);
             }
         });
     }
-
-
 
 </script>  

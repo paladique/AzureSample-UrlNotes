@@ -61,7 +61,7 @@ namespace contextual_notes
             await client.CreateDocumentAsync((UriFactory.CreateDocumentCollectionUri(c["database"], collectionName)), item);
         }
 
-        public static async void DeleteDocument(int id, string collectionName)
+        public static async void DeleteDocument(string id, string collectionName)
         {
             var c = GetConfiguration();
             var client = new DocumentClient(new Uri(c["endpoint"]), c["authkey"]);
@@ -74,7 +74,6 @@ namespace contextual_notes
         public static async void EditDocument(Item item, string id, string collectionName)
         {
             var c = GetConfiguration();
-
             var client = new DocumentClient(new Uri(c["endpoint"]), c["authkey"]);
 
             Document doc = client.CreateDocumentQuery<Document>(UriFactory.CreateDocumentCollectionUri(c["database"], collectionName), new FeedOptions { EnableCrossPartitionQuery = true })
@@ -89,13 +88,13 @@ namespace contextual_notes
             Document updated = await client.ReplaceDocumentAsync(doc, new RequestOptions { PartitionKey = new PartitionKey(doc.GetPropertyValue<string>("name")) });
         }
 
-        public static Item GetDocument(int id, string collectionName)
+        public static Item GetDocument(string id, string collectionName)
         {
             var c = GetConfiguration();
             var client = new DocumentClient(new Uri(c["endpoint"]), c["authkey"]);
 
             Item doc = client.CreateDocumentQuery<Item>(UriFactory.CreateDocumentCollectionUri(c["database"], collectionName), new FeedOptions { EnableCrossPartitionQuery = true })
-                                        .Where(r => r.Id == id.ToString())
+                                        .Where(r => r.Id == id)
                                         .AsEnumerable()
                                         .SingleOrDefault();
             return doc;

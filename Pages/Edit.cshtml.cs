@@ -15,7 +15,7 @@ namespace contextual_notes.Pages
         [BindProperty]
         public string Collection { get; set; }
 
-        public void OnGet(int id, string collection)
+        public void OnGet(string id, string collection)
         {
            var item = DocumentDBRepository<object>.GetDocument(id, collection);
            ItemToEdit = new Item { Id = item.Id, Comments = item.Comments, Tutorial = item.Tutorial};

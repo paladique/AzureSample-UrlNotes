@@ -14,6 +14,7 @@ namespace contextual_notes.Pages
 {
     public class IndexModel : PageModel
     {
+        [BindProperty]
         public List<string> Collections { get; set; }
         [BindProperty]
         public string CollectionName { get; set; }
@@ -31,7 +32,7 @@ namespace contextual_notes.Pages
             Collections = await DocumentDBRepository<object>.GetDBCollections();
         }
 
-        public IActionResult OnGetDeleteAsync(int recordId, string collection)
+        public IActionResult OnGetDeleteAsync(string recordId, string collection)
         {
             DocumentDBRepository<object>.DeleteDocument(recordId, collection);
             GetCollection().Wait();
@@ -105,12 +106,6 @@ namespace contextual_notes.Pages
         public string name;
     }
 
-    //more types than just strings
-    //ie:comments (date, author)
-    //vote (int)
-    //image 
-    //aim at channel 9 tag - see if possible
-    //Search
 
     public class Video : Item
     {
@@ -130,7 +125,9 @@ namespace contextual_notes.Pages
 
         [JsonProperty(PropertyName = "length")]
         public int Length { get; set; }
+        [JsonProperty(PropertyName = "commentCount")]
         public int CommentCount { get; set; }
+        [JsonProperty(PropertyName = "screencap")]
         public Uri Screencap { get; set; }
     }
 
