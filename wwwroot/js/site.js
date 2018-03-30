@@ -66,7 +66,16 @@
                         tableDataRow.append("<td><a href=Edit/" + selectedCollection + "/" + jsonSourceData[jr]['id'] + ">Edit</a>")
                         break;
                     case "Delete":
-                        tableDataRow.append("<td><a href=/Index/?handler=Delete&recordId=" + jsonSourceData[jr]['id'] + "&collection=" + selectedCollection +">Delete</a>")// '<td>' + jsonSourceData[jr][tableHeaderKeyArray[ki]])
+                        tableDataRow.append("<td><a href=/Index/?handler=Delete&recordId=" + jsonSourceData[jr]['id'] + "&collection=" + selectedCollection +">Delete</a>")
+                        break;
+                    case "keywords":
+                        var words = "";
+                        for (x in jsonSourceData[jr][tableHeaderKeyArray[ki]]) {
+
+                            console.log(jsonSourceData[jr][tableHeaderKeyArray[ki]][x].name)
+                            words += jsonSourceData[jr][tableHeaderKeyArray[ki]][x].name + "<br>"
+                        }
+                        tableDataRow.append("<td>" + words)
                         break;
 
                     default:
@@ -122,25 +131,3 @@
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-//case "name":
-//tableDataRow.append("<td><a href=" + jsonSourceData[jr]['url'] + ">" + jsonSourceData[jr]['name'] + "</a>")// '<td>' + jsonSourceData[jr][tableHeaderKeyArray[ki]])
-//                    //case "Edit":
-//                    //    tableDataRow.append("<td><a href=Edit/" + selectedCollection + "/" + jsonSourceData[jr]['id'] + ">Edit</a>")// '<td>' + jsonSourceData[jr][tableHeaderKeyArray[ki]])
-//                    //case "Delete":
-//                    //    tableDataRow.append("<td><a href=Delete/" + selectedCollection + "/" + jsonSourceData[jr]['id'] + ">Delete</a>")// '<td>' + jsonSourceData[jr][tableHeaderKeyArray[ki]])
-
-//                    default:
-//tableDataRow.append('<td>' + jsonSourceData[jr][tableHeaderKeyArray[ki]])

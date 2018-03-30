@@ -8,13 +8,6 @@
 
 <input type="button" value="Add New" onclick="$('#createForm').toggle()" id="AddBtn" />
 
-@if (!string.IsNullOrEmpty(Model.CollectionName))
-{
-    <script type="text/javascript">
-            SelectedIndexChanged();
-    </script>
-}
-
 <form asp-page-handler="Create" method="post">
     @Html.DropDownListFor(x => x.CollectionName, new SelectList(@Model.Collections, "", ""), "Select Collection", new { onchange = "SelectedIndexChanged()", id = "ddlCollection" })
 

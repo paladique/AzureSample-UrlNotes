@@ -42,16 +42,21 @@ namespace contextual_notes.Pages
 
         public IActionResult OnPostCreate()
         {
-            NoteItem.Name = Utils.Unfurl(NoteItem.Url.ToString());
 
             switch (CollectionName)
             {
+
                 case "Videos":
-                    DocumentDBRepository<Video>.CreateDocument(new Video(NoteItem), CollectionName);
+                    var videoItem = new Video(NoteItem);
+                    Utils.Unfurl<Video>(ref videoItem, NoteItem.Url.ToString());
+                    DocumentDBRepository<Video>.CreateDocument(videoItem, CollectionName);
                     break;
 
                 case "Docs":
-                    DocumentDBRepository<Doc>.CreateDocument(new Doc(NoteItem), CollectionName);
+                    var docItem = new Doc(NoteItem);
+
+                    Utils.Unfurl<Doc>(ref docItem, NoteItem.Url.ToString());
+                    DocumentDBRepository<Doc>.CreateDocument(docItem, CollectionName);
                     break;
 
                 default:
