@@ -113,7 +113,7 @@ namespace contextual_notes
                 q.QueryText += secondClause;
             }
 
-            List<Item> queryResult = (client.CreateDocumentQuery<Item>(
+            List<T> queryResult = (client.CreateDocumentQuery<T>(
                      UriFactory.CreateDocumentCollectionUri(c["database"], collectionName),
                      q,
                      queryOptions)).ToList();
