@@ -78,8 +78,13 @@ function JSONTable(tableObject) {
                         }
                         tableDataRow.append("<td>" + words)
                         break;
-                    case "Screencap":
-                        tableDataRow.append("<td><img src='" + jsonSourceData[jr][tableHeaderKeyArray[ki]] + "'/>")
+                    case "screencap":
+                        if (jsonSourceData[jr][tableHeaderKeyArray[ki]] !== null) {
+                            tableDataRow.append("<td><img width=50 height=50 src='" + jsonSourceData[jr][tableHeaderKeyArray[ki]] + "'/>")
+                        }
+                        else {
+                            tableDataRow.append("<td>")
+                        }
                         break;
                     default:
                         tableDataRow.append('<td>' + jsonSourceData[jr][tableHeaderKeyArray[ki]])
