@@ -7,7 +7,7 @@ using Microsoft.Azure.Documents.Client;
 using Microsoft.Azure.Documents.Linq;
 using Newtonsoft.Json;
 using Microsoft.Azure.Documents;
-using contextual_notes.Pages;
+using contextual_notes.Models;
 using Microsoft.Extensions.Configuration;
 using System.IO;
 
@@ -42,9 +42,16 @@ namespace contextual_notes
             try
             {
                 var client = new DocumentClient(new Uri(c["endpoint"]), c["authkey"]);
+                //var colls = await client.ReadDocumentCollectionFeedAsync(UriFactory.CreateDatabaseUri(c["database"] ?? CreateDB().Result));
                 var colls = await client.ReadDocumentCollectionFeedAsync(UriFactory.CreateDatabaseUri(c["database"]));
+
                 collectionNames = from x in colls
                                   select x.Id;
+
+                //if (collectionNames == null)
+                //{
+                //    client.CreateDocumentCollectionAsync(UriFactory.CreateDatabaseUri(c["database"]).ToString(), "Videos");
+                //}
             }
             catch (Exception ex)
             {
@@ -53,6 +60,24 @@ namespace contextual_notes
             }
 
             return collectionNames.ToList<string>();
+        }
+
+        private async static Task<string> CreateDB()
+        {
+            var c = GetConfiguration();
+
+            try
+            {
+                Database database = await client.CreateDatabaseIfNotExistsAsync(new Database { Id = "NotesDB" });
+                c["database"] = database.Id;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            
+            return c["database"];
         }
 
         public static async void CreateDocument(T item, string collectionName)
@@ -158,5 +183,11 @@ namespace contextual_notes
 
             return connStrings;
         }
+
+        //public void AddSampleData()
+        //{
+
+        
+        //}
     }
 }

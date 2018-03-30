@@ -1,4 +1,5 @@
-﻿$(document).ready(function () {
+﻿
+$(document).ready(function () {
     loadTable();
 });
 
@@ -51,7 +52,7 @@ function JSONTable(tableObject) {
 
         for (var kc = 0; kc < tableHeaderKeys.length; kc++) {
             tableHeaderKeyArray.push(tableHeaderKeys[kc])
-            $(rootHeaderRow).append('<th>' + tableHeaderKeys[kc] + '</th>')
+            $(rootHeaderRow).append('<th>' + (tableHeaderKeys[kc].charAt(0).toUpperCase() + tableHeaderKeys[kc].slice(1)) + '</th>')
         }
 
         rootTableObject.append("<tbody></tbody>")
@@ -61,19 +62,18 @@ function JSONTable(tableObject) {
             for (var ki = 0; ki < tableHeaderKeyArray.length; ki++) {
 
                 switch (tableHeaderKeyArray[ki]) {
-                    case "Name":
-                        tableDataRow.append("<td><a href=" + jsonSourceData[jr]['Url'] + ">" + jsonSourceData[jr]['Name'] + "</a>")
+                    case "name":
+                        tableDataRow.append("<td><a href=" + jsonSourceData[jr]['url'] + ">" + jsonSourceData[jr]['name'] + "</a>")
                         break;
                     case "Edit":
-                        tableDataRow.append("<td><a href=Edit/" + selectedCollection + "/" + jsonSourceData[jr]['Id'] + ">Edit</a>")
+                        tableDataRow.append("<td><a href=Edit/" + selectedCollection + "/" + jsonSourceData[jr]['id'] + ">Edit</a>")
                         break;
                     case "Delete":
-                        tableDataRow.append("<td><a href=/Index/?handler=Delete&recordId=" + jsonSourceData[jr]['Id'] + "&collection=" + selectedCollection + ">Delete</a>")
+                        tableDataRow.append("<td><a href=/Index/?handler=Delete&recordId=" + jsonSourceData[jr]['id'] + "&collection=" + selectedCollection + ">Delete</a>")
                         break;
-                    case "Keywords":
+                    case "keywords":
                         var words = "";
                         for (x in jsonSourceData[jr][tableHeaderKeyArray[ki]]) {
-
                             words += jsonSourceData[jr][tableHeaderKeyArray[ki]][x].name + "<br>"
                         }
                         tableDataRow.append("<td>" + words)
@@ -93,8 +93,9 @@ function JSONTable(tableObject) {
         if (setFullJSON) {
             this.tableFullJSON = jsonSourceData
         }
+        
 
-        return tableHeaderKeyArray
+        return remove(tableHeaderKeyArray, ["Edit", "Delete"])
 
     }
 
@@ -138,4 +139,16 @@ function JSONTable(tableObject) {
             this.fromJSON(resultList, false)
         }
     }
+}
+
+function remove(array, elements) {
+
+    for (var i = 0; i < elements.length; i++)
+    {
+        const index = array.indexOf(elements[i]);
+        array.splice(index, 1);
+    }
+
+    return array
+ 
 }

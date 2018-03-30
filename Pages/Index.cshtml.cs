@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using contextual_notes.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+
 
 namespace contextual_notes.Pages
 {
@@ -31,6 +33,7 @@ namespace contextual_notes.Pages
         {
             DocumentDBRepository<object>.DeleteDocument(recordId, collection);
             GetCollection().Wait();
+            CollectionName = collection;
 
             return Page();
         }
@@ -58,6 +61,7 @@ namespace contextual_notes.Pages
                     break;
             }
 
+            GetCollection().Wait();
             return Page();
         }
 
@@ -105,68 +109,6 @@ namespace contextual_notes.Pages
 
             return new JsonResult(json);
         }
-    }
-
-
-    public class Item
-    {
-        [JsonProperty(PropertyName = "Url")]
-        public Uri Url { get; set; }
-        [JsonProperty(PropertyName = "Comments")]
-        public string Comments { get; set; }
-        [JsonProperty(PropertyName = "Tutorial")]
-        public bool Tutorial { get; set; }
-        [JsonProperty(PropertyName = "ID")]
-        public string Id { get; set; }
-        [JsonProperty(PropertyName = "Name")]
-        public string Name { get; set; }
-        [JsonProperty(PropertyName = "Keywords")]
-        public List<Keyword> Keywords { get; set; }
-    }
-
-    public class Keyword
-    {
-        public string name;
-    }
-
-
-    public class Video : Item
-    {
-        internal Video(Item i)
-        {
-            Id = i.Id;
-            Name = i.Name;    
-            Url = i.Url;
-            Comments = i.Comments;
-            Tutorial = i.Tutorial;
-            Keywords = i.Keywords;
-        }
-
-        [JsonConstructor]
-        public Video()
-        { }
-
-        [JsonProperty(PropertyName = "Comment_Count")]
-        public int CommentCount { get; set; }
-        [JsonProperty(PropertyName = "Screencap")]
-        public Uri Screencap { get; set; }
-    }
-
-    public class Doc : Item
-    {
-        internal Doc(Item i)
-        {
-            Id = i.Id;
-            Name = i.Name;
-            Url = i.Url;
-            Comments = i.Comments;
-            Tutorial = i.Tutorial;
-            Keywords = i.Keywords;
-        }
-
-        [JsonConstructor]
-        public Doc()
-        { }
     }
 
 }
