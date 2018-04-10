@@ -46,14 +46,14 @@ namespace contextual_notes.Pages
 
                 case "Videos":
                     var videoItem = new Video(NoteItem);
-                    Utils.Unfurl<Video>(ref videoItem, NoteItem.Url.ToString());
+                    Utils.Unfurl<Video>(ref videoItem, NoteItem.Url);
                     DocumentDBRepository<Video>.CreateDocument(videoItem, CollectionName);
                     break;
 
                 case "Docs":
                     var docItem = new Doc(NoteItem);
 
-                    Utils.Unfurl<Doc>(ref docItem, NoteItem.Url.ToString());
+                    Utils.Unfurl<Doc>(ref docItem, NoteItem.Url);
                     DocumentDBRepository<Doc>.CreateDocument(docItem, CollectionName);
                     break;
 

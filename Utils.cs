@@ -7,7 +7,7 @@ namespace contextual_notes
 {
     public class Utils
     {
-        public static void Unfurl<T>(ref T item,string url) where T:Item
+        public static void Unfurl<T>(ref T item, Uri url) where T:Item
         {
 
             try
