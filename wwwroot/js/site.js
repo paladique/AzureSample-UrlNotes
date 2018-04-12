@@ -220,14 +220,21 @@ function search() {
 }
 
 function addToQuery(item) {
+    var searchTerms = $("#searchBy").text();
 
     if ($("span.badge-success").length < 2 && !$(item).hasClass("badge-success")) {
         $(item).toggleClass("badge-success")
         $("#searchBy").append($(item).text() + " ")
     }
     else {
-        $(item).hasClass("badge-success").toggleClass("badge-success")
-        $("#searchBy").text($(this).text().replace($(item).text() + " ", ""))
+
+        if ($(item).hasClass("badge-success"))
+        {
+            $(item).toggleClass("badge-success")
+
+            $("#searchBy").text(searchTerms.replace($(item).text(), ""))
+        }
+       
     }
 
 }
