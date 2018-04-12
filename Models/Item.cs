@@ -10,11 +10,11 @@ namespace contextual_notes.Models
     public class Item
     {
         [JsonProperty(PropertyName = "url")]
-        public Uri Url { get; set; }
+        public Uri Url { get; set; } 
         [JsonProperty(PropertyName = "comments")]
-        public string Comments { get; set; }
+        public string Notes { get; set; }
         [JsonProperty(PropertyName = "tutorial")]
-        public bool Tutorial { get; set; }
+        public bool IsTutorial { get; set; }
         [JsonProperty(PropertyName = "id")]
         public string Id { get; set; }
         [JsonProperty(PropertyName = "name")]
@@ -23,7 +23,9 @@ namespace contextual_notes.Models
         public List<Keyword> Keywords { get; set; }
         //helper property to convert strings to uri
         [JsonIgnore]
-        public string stringUrl { get; set;}
+        public string stringUrl { get; set;} 
+
+        public Item() { }
     }
 
     public class Keyword
@@ -39,61 +41,55 @@ namespace contextual_notes.Models
         [JsonProperty(PropertyName = "screencap")]
         public Uri Screencap { get; set; }
 
-        internal Video(Item i)
+        internal Video(Item i, bool unfurl = true)
         {
             Id = i.Id;
             Name = i.Name;
-            Url = i.Url;
-            Comments = i.Comments;
-            Tutorial = i.Tutorial;
+            Url = i.Url ?? new Uri(i.stringUrl);
+            Notes = i.Notes;
+            IsTutorial = i.IsTutorial;
             Keywords = i.Keywords;
-        }
 
-
-        [JsonConstructor]
-        public Video(bool unfurl = false)
-        {
             if (unfurl)
-            {   
-                Url = Url ?? new Uri(stringUrl);
+            {
                 var video = this;
                 Utils.Unfurl(ref video);
-
+               
                 Name = video.Name;
                 CommentCount = video.CommentCount;
                 Keywords = video.Keywords;
                 Screencap = video.Screencap;
             }
 
-
         }
+
+        [JsonConstructor]
+        public Video() { }
     }
 
     public class Doc : Item
     {
-        internal Doc(Item i)
+        internal Doc(Item i, bool unfurl = true)
         {
             Id = i.Id;
             Name = i.Name;
-            Url = i.Url;
-            Comments = i.Comments;
-            Tutorial = i.Tutorial;
+            Url = i.Url ?? new Uri(i.stringUrl);
+            Notes = i.Notes;
+            IsTutorial = i.IsTutorial;
             Keywords = i.Keywords;
+
+            if (unfurl)
+            {
+                var doc = this;
+                Utils.Unfurl(ref doc);
+
+                Name = doc.Name;
+                Keywords = doc.Keywords;
+            }
         }
 
         [JsonConstructor]
-        public Doc(bool unfurl = false)
-        {
-            if (unfurl)
-            {
-                Url = Url ?? new Uri(stringUrl);
-                var video = this;
-                Utils.Unfurl(ref video);
-
-                Name = video.Name;
-                Keywords = video.Keywords;
-            }
-        }
+        public Doc() { }
     }
 
     

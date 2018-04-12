@@ -20,7 +20,7 @@ namespace contextual_notes.Pages
         public void OnGet(string id, string collection)
         {
            var item = DocumentDBRepository.GetDocumentItem<Item>(id, collection);
-           ItemToEdit = new Item {Name = item.Name, Id = item.Id, Comments = item.Comments, Tutorial = item.Tutorial};
+           ItemToEdit = new Item {Name = item.Name, Id = item.Id, Notes = item.Notes, IsTutorial = item.IsTutorial};
            Collection = collection;
         }
 

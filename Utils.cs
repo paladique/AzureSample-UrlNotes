@@ -28,13 +28,19 @@ namespace contextual_notes
                 var title = (from x in metaTags
                         where (x.Attributes["property"] != null && x.Attributes["property"].Value == "og:title") 
                         select x).FirstOrDefault().Attributes["content"].Value;
-
-                var keywords = ((from x in metaTags
-                             where (x.Attributes["name"] != null && x.Attributes["name"].Value == "keywords")
-                             select x).FirstOrDefault().Attributes["content"].Value).Split(',');
-
                 item.Name = title;
-                item.Keywords = keywords.Select(x => new Keyword() { name = x }).ToList<Keyword>() ?? null;
+
+                var keywords = (from x in metaTags
+                                 where (x.Attributes["name"] != null && x.Attributes["name"].Value == "keywords")
+                                 select x);
+
+
+                if (keywords.Count() > 0)
+                {
+                   var words = keywords.FirstOrDefault().Attributes["content"].Value.Split(',');
+                   item.Keywords = words.Select(x => new Keyword() { name = x }).ToList();
+                }
+
 
                 if (item.GetType() == typeof(Video))
                 {
@@ -54,10 +60,9 @@ namespace contextual_notes
                 
             }
 
-
-            catch
+            catch(Exception ex)
             {
-                
+                throw ex;
             }
             
         }
