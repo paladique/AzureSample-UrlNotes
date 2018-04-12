@@ -26,12 +26,12 @@ namespace contextual_notes.Pages
 
         public async Task GetCollection()
         {
-            Collections = await DocumentDBRepository<object>.GetDBCollections();
+            Collections = await DocumentDBRepository.GetDBCollections();
         }
 
         public IActionResult OnGetDeleteAsync(string recordId, string collection)
         {
-            DocumentDBRepository<object>.DeleteDocument(recordId, collection);
+            DocumentDBRepository.DeleteDocument(recordId, collection);
             GetCollection().Wait();
             CollectionName = collection;
 
@@ -46,15 +46,14 @@ namespace contextual_notes.Pages
 
                 case "Videos":
                     var videoItem = new Video(NoteItem);
-                    Utils.Unfurl<Video>(ref videoItem, NoteItem.Url);
-                    DocumentDBRepository<Video>.CreateDocument(videoItem, CollectionName);
+                    Utils.Unfurl<Video>(ref videoItem);
+                    DocumentDBRepository.CreateDocument(videoItem, CollectionName);
                     break;
 
                 case "Docs":
                     var docItem = new Doc(NoteItem);
-
-                    Utils.Unfurl<Doc>(ref docItem, NoteItem.Url);
-                    DocumentDBRepository<Doc>.CreateDocument(docItem, CollectionName);
+                    Utils.Unfurl<Doc>(ref docItem);
+                    DocumentDBRepository.CreateDocument(docItem, CollectionName);
                     break;
 
                 default:
@@ -73,11 +72,11 @@ namespace contextual_notes.Pages
             {
 
                 case "Videos":
-                    json = DocumentDBRepository<Video>.Search(new Video(NoteItem), selectedCollection, searchTerms, searchText);
+                    json = DocumentDBRepository.Search<Video>(selectedCollection, searchTerms, searchText);
                     break;
 
                 case "Docs":
-                    json = DocumentDBRepository<Doc>.Search(new Doc(NoteItem), selectedCollection, searchTerms, searchText);
+                    json = DocumentDBRepository.Search<Doc>(selectedCollection, searchTerms, searchText);
                     break;
 
                 default:
@@ -95,11 +94,11 @@ namespace contextual_notes.Pages
             switch (selectedCollection)
             {
                 case "Videos":
-                    json = await DocumentDBRepository<Video>.GetAllDocsAsync(selectedCollection);
+                    json = await DocumentDBRepository.GetAllDocsAsync<Video>(selectedCollection);
                     break;
 
                 case "Docs":
-                    json = await DocumentDBRepository<Doc>.GetAllDocsAsync(selectedCollection);
+                    json = await DocumentDBRepository.GetAllDocsAsync<Doc>(selectedCollection);
                     break;
 
                 default:

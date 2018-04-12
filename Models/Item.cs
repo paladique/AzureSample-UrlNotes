@@ -21,8 +21,8 @@ namespace contextual_notes.Models
         public string Name { get; set; }
         [JsonProperty(PropertyName = "keywords")]
         public List<Keyword> Keywords { get; set; }
-
         //helper property to convert strings to uri
+        [JsonIgnore]
         public string stringUrl { get; set;}
     }
 
@@ -34,6 +34,11 @@ namespace contextual_notes.Models
 
     public class Video : Item
     {
+        [JsonProperty(PropertyName = "comment_count")]
+        public int CommentCount { get; set; }
+        [JsonProperty(PropertyName = "screencap")]
+        public Uri Screencap { get; set; }
+
         internal Video(Item i)
         {
             Id = i.Id;
@@ -52,19 +57,16 @@ namespace contextual_notes.Models
             {   
                 Url = Url ?? new Uri(stringUrl);
                 var video = this;
-                Utils.Unfurl(ref video, Url);
+                Utils.Unfurl(ref video);
 
                 Name = video.Name;
                 CommentCount = video.CommentCount;
                 Keywords = video.Keywords;
                 Screencap = video.Screencap;
             }
-        }
 
-        [JsonProperty(PropertyName = "comment_count")]
-        public int CommentCount { get; set; }
-        [JsonProperty(PropertyName = "screencap")]
-        public Uri Screencap { get; set; }
+
+        }
     }
 
     public class Doc : Item
@@ -83,10 +85,11 @@ namespace contextual_notes.Models
         public Doc(bool unfurl = false)
         {
             if (unfurl)
-            {   
+            {
                 Url = Url ?? new Uri(stringUrl);
                 var video = this;
-                Utils.Unfurl(ref video, Url);
+                Utils.Unfurl(ref video);
+
                 Name = video.Name;
                 Keywords = video.Keywords;
             }

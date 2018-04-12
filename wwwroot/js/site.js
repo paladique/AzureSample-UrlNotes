@@ -1,5 +1,4 @@
-﻿
-$(document).ready(function () {
+﻿$(document).ready(function () {
     loadTable();
 });
 
@@ -156,4 +155,77 @@ function remove(array, elements) {
 
     return array
  
+}
+
+
+function loadTable() {
+    var select = $("#ddlCollection option:selected").text();
+    $("#AddBtn").show();
+    $("#searchBtn").show();
+
+    $.ajax({
+        type: "GET",
+        url: "/Index/?handler=List&selectedCollection=" + select,
+        contentType: "application/json",
+        dataType: "json",
+        success: function (response) {
+
+            var jsonTable = new JSONTable($("#noteTable"))
+            var headerData = jsonTable.fromJSON(JSON.parse(response), select)
+
+            $("#searchItems").html("");
+
+            for (x in headerData) {
+
+                $("#searchItems").append("<span class='badge' onclick='addToQuery(this)'>" + headerData[x] + "</span>")
+            }
+
+        },
+        failure: function (response) {
+            alert(response);
+        }
+    });
+}
+
+function search() {
+    var select = $("#ddlCollection option:selected").text();
+
+
+    $.ajax({
+        type: "POST",
+        url: "/Index/?handler=Search&selectedCollection=" + select + "&searchTerms=" + $("#searchBy").text() + "&searchText=" + $("#queryText").val(),
+        contentType: 'application/json',
+        dataType: "json",
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader("RequestVerificationToken",
+                $('input:hidden[name="__RequestVerificationToken"]').val());
+        },
+        success: function (response) {
+
+            var jsonTable = new JSONTable($("#noteTable"))
+            var headerData = jsonTable.fromJSON(JSON.parse(response), select)
+
+            for (x in headerData) {
+
+                $("#searchItems").append("<span class='badge' onclick='addToQuery(this)'>" + headerData[x] + "</span>")
+            }
+
+        },
+        failure: function (response) {
+            alert(response);
+        }
+    });
+}
+
+function addToQuery(item) {
+
+    if ($("span.badge-success").length < 2 && !$(item).hasClass("badge-success")) {
+        $(item).toggleClass("badge-success")
+        $("#searchBy").append($(item).text() + " ")
+    }
+    else {
+        $(item).hasClass("badge-success").toggleClass("badge-success")
+        $("#searchBy").text($(this).text().replace($(item).text() + " ", ""))
+    }
+
 }

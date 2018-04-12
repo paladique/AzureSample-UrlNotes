@@ -19,15 +19,15 @@ namespace contextual_notes.Pages
 
         public void OnGet(string id, string collection)
         {
-           var item = DocumentDBRepository<object>.GetDocument(id, collection);
-           ItemToEdit = new Item { Id = item.Id, Comments = item.Comments, Tutorial = item.Tutorial};
+           var item = DocumentDBRepository.GetDocumentItem<Item>(id, collection);
+           ItemToEdit = new Item {Name = item.Name, Id = item.Id, Comments = item.Comments, Tutorial = item.Tutorial};
            Collection = collection;
         }
 
-        public void OnPostSave()
+        public IActionResult OnPostSave()
         {
-            DocumentDBRepository<Item>.EditDocument(ItemToEdit, ItemToEdit.Id,Collection);
-            Redirect("./Index");
+            DocumentDBRepository.EditDocument(ItemToEdit,Collection);
+            return Redirect("~/Index");
         }
     }
 }

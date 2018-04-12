@@ -6,7 +6,7 @@
 <h1>Edit</h1>
 <form asp-page-handler="Save" method="post">
     <div>
-        <h1>Editing: <label asp-for="ItemToEdit.Name"></label></h1>
+        <h1>Editing: @Model.ItemToEdit.Name</h1>
 
         <label>Comments</label>
         <input asp-for="ItemToEdit.Comments" />

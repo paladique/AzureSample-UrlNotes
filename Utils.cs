@@ -7,7 +7,7 @@ namespace contextual_notes
 {
     public class Utils
     {
-        public static void Unfurl<T>(ref T item, Uri url) where T:Item
+        public static void Unfurl<T>(ref T item) where T:Item
         {
 
             try
@@ -17,7 +17,7 @@ namespace contextual_notes
                 try
                 {
                     var h = new HtmlWeb();
-                    doc = h.Load(url);
+                    doc = h.Load(item.Url);
                 }
                 catch
                 {
