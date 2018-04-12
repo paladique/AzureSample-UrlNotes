@@ -1,4 +1,6 @@
-﻿$(document).ready(function () {
+﻿//Cloned from https://github.com/bmsimons/bootstrap-jsontables and modified
+
+$(document).ready(function () {
     loadTable();
 });
 
@@ -63,7 +65,6 @@ function JSONTable(tableObject) {
                 switch (tableHeaderKeyArray[ki]) {
                     case "name":
                         tableDataRow.append("<td><a href=" + jsonSourceData[jr]['url'] + ">" + jsonSourceData[jr]['name'] + "</a>")
-                        console.log("<td><a href=" + jsonSourceData[jr]['url'] + ">" + jsonSourceData[jr]['name'] + "</a>")
                         break;
                     case "Edit":
                         tableDataRow.append("<td><a href=Edit/" + selectedCollection + "/" + jsonSourceData[jr]['id'] + ">Edit</a>")
