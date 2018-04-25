@@ -11,7 +11,7 @@ namespace contextual_notes.Models
     {
         [JsonProperty(PropertyName = "url")]
         public Uri Url { get; set; } 
-        [JsonProperty(PropertyName = "comments")]
+        [JsonProperty(PropertyName = "notes")]
         public string Notes { get; set; }
         [JsonProperty(PropertyName = "tutorial")]
         public bool IsTutorial { get; set; }
