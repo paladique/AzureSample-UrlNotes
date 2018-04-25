@@ -132,7 +132,7 @@ namespace contextual_notes
         public static async void EditDocument(Item item, string collectionName)
         {
             var doc = GetDocument(item.Id, collectionName);
-            doc.SetPropertyValue("comments", item.Notes);
+            doc.SetPropertyValue("notes", item.Notes);
             doc.SetPropertyValue("tutorial", item.IsTutorial);
 
             Document updated = await client.ReplaceDocumentAsync(doc, new RequestOptions { PartitionKey = new PartitionKey(doc.GetPropertyValue<string>("name")) });
