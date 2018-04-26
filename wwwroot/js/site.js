@@ -173,6 +173,7 @@ function loadTable() {
     var select = $("#ddlCollection option:selected").text();
     $("#AddBtn").show();
     $("#searchBtn").show();
+    $("#searchBtn").prop("disabled", true);
 
     $.ajax({
         type: "GET",
@@ -242,3 +243,15 @@ function addToQuery(item) {
     }
 
 }
+
+$("#queryText").keyup(function () {
+
+    if ($(this).val().trim().length > 0) {
+
+        $("#searchBtn").prop("disabled", false)
+    }
+    else {
+        $("#searchBtn").prop("disabled", true)
+
+    }
+});
