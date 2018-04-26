@@ -29,24 +29,27 @@
 
 </form>
 
-<input type="button" value="Add New" onclick="$('#createForm').toggle()" id="AddBtn" style="display:none" /> <br />
 
 
- Searching by (Select up to 2): <div id="searchBy" name="searchTerms"></div><br />
-<input type="text" value="Search" id="queryText" />
+<div id="searchContainer">
+    Searching by (Select up to 2):
 
-<input type="button" value="Search" id="searchBtn" onclick="search()" style="display:none" /><br />
+    <div id="searchItems">
 
-
-<div id="searchItems">
-
+    </div>
+    <input type="text" id="queryText" />
+    <input type="button" value="Search" id="searchBtn" onclick="search()" style="display:none" />
 </div>
+
+
+<input type="button" value="Add New Url" onclick="$('#createForm').toggle()" id="AddBtn" style="display:none" /> <br />
 
 <table id="noteTable" class="table table-striped">
     <thead>
 
     </thead>
 </table>
+<div id="searchBy" name="searchTerms" style="visibility:hidden"></div>
 
 <form>
     <input name="__RequestVerificationToken" type="hidden" value="CfDJ8KW5cuB058RCnNyZSLI7AUjUAtTwe54jQ4Z9Goyn3WKPcpVFYSFUM5J-JDFC3E-MZIUcyR0UnbrvrC_sHv6MbUONStuIMhqDc7i00pQiGkrzf3hK6t5gZFVrjUpyAcargow4zvKU_ISjdPfoLTNF588" />

@@ -53,7 +53,7 @@ function JSONTable(tableObject) {
 
         for (var kc = 0; kc < tableHeaderKeys.length; kc++) {
             tableHeaderKeyArray.push(tableHeaderKeys[kc])
-            $(rootHeaderRow).append('<th>' + (tableHeaderKeys[kc].charAt(0).toUpperCase() + tableHeaderKeys[kc].slice(1)) + '</th>')
+            $(rootHeaderRow).append('<th nowrap>' + (tableHeaderKeys[kc].charAt(0).toUpperCase() + tableHeaderKeys[kc].slice(1).replace('_', ' ')) + '</th>')
         }
 
         rootTableObject.append("<tbody></tbody>")
@@ -74,10 +74,15 @@ function JSONTable(tableObject) {
                         break;
                     case "keywords":
                         var words = "";
+                        var numberOfWords = jsonSourceData[jr][tableHeaderKeyArray[ki]].length-1;
+
                         for (x in jsonSourceData[jr][tableHeaderKeyArray[ki]]) {
-                            words += jsonSourceData[jr][tableHeaderKeyArray[ki]][x].name + "<br>"
+                            words += jsonSourceData[jr][tableHeaderKeyArray[ki]][x].name
+                            if (numberOfWords != x) {
+                                words += ", <br>"
+                            }
                         }
-                        tableDataRow.append("<td>" + words)
+                        tableDataRow.append("<td>" + words.replace('null',''))
                         break;
                     case "screencap":
                         if (jsonSourceData[jr][tableHeaderKeyArray[ki]] !== null) {
@@ -88,7 +93,11 @@ function JSONTable(tableObject) {
                         }
                         break;
                     default:
-                        tableDataRow.append('<td>' + jsonSourceData[jr][tableHeaderKeyArray[ki]])
+                        var data = jsonSourceData[jr][tableHeaderKeyArray[ki]];
+                        if (data == undefined) {
+                            data = '';
+                        }
+                        tableDataRow.append('<td>' + data)
                 }
             }
 
@@ -206,11 +215,6 @@ function search() {
 
             var jsonTable = new JSONTable($("#noteTable"))
             var headerData = jsonTable.fromJSON(JSON.parse(response), select)
-
-            for (x in headerData) {
-
-                $("#searchItems").append("<span class='badge' onclick='addToQuery(this)'>" + headerData[x] + "</span>")
-            }
 
         },
         failure: function (response) {

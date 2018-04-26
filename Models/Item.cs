@@ -9,24 +9,28 @@ namespace contextual_notes.Models
 
     public class Item
     {
-        [JsonProperty(PropertyName = "url")]
+        [JsonProperty(PropertyName = "url", Order = 1)]
         public Uri Url { get; set; } 
-        [JsonProperty(PropertyName = "notes")]
+        [JsonProperty(PropertyName = "notes", NullValueHandling = NullValueHandling.Ignore, Order = 1)]
         public string Notes { get; set; }
-        [JsonProperty(PropertyName = "tutorial")]
+        [JsonProperty(PropertyName = "tutorial", Order = 1)]
         public bool IsTutorial { get; set; }
-        [JsonProperty(PropertyName = "id")]
+        [JsonProperty(PropertyName = "id", Order = 1)]
         public string Id { get; set; }
-        [JsonProperty(PropertyName = "name")]
+        [JsonProperty(PropertyName = "name", Order = 0)]
         public string Name { get; set; }
-        [JsonProperty(PropertyName = "keywords")]
+        [JsonProperty(PropertyName = "keywords", NullValueHandling = NullValueHandling.Ignore, Order = 1)]
         public List<Keyword> Keywords { get; set; }
         //helper property to convert strings to uri
         [JsonIgnore]
         public string stringUrl { get; set;} 
 
         public Item() { }
+
+        
     }
+
+    
 
     public class Keyword
     {
@@ -36,9 +40,9 @@ namespace contextual_notes.Models
 
     public class Video : Item
     {
-        [JsonProperty(PropertyName = "comment_count")]
+        [JsonProperty(PropertyName = "comment_count", Order = 1)]
         public int CommentCount { get; set; }
-        [JsonProperty(PropertyName = "screencap")]
+        [JsonProperty(PropertyName = "screencap", Order = 1)]
         public Uri Screencap { get; set; }
 
         internal Video(Item i, bool unfurl = true)

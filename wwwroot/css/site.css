@@ -10,7 +10,25 @@ body {
     padding-right: 15px;
 }
 
+#searchBy {
+    font-size: 15px;
+    font-weight:bolder;
+    padding: 5px
+}
 
+#AddBtn {
+    margin-top: 10px;
+}
+
+#searchContainer {
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+#searchItems {
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
 
 .badge-success {
     background-color: #419641;

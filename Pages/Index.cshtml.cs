@@ -92,11 +92,11 @@ namespace contextual_notes.Pages
             switch (selectedCollection)
             {
                 case "Videos":
-                    json = await DocumentDBRepository.GetAllDocsAsync<Video>(selectedCollection);
+                    json = await DocumentDBRepository.GetAllDocs<Video>(selectedCollection);
                     break;
 
                 case "Docs":
-                    json = await DocumentDBRepository.GetAllDocsAsync<Doc>(selectedCollection);
+                    json = await DocumentDBRepository.GetAllDocs<Doc>(selectedCollection);
                     break;
 
                 default:

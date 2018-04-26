@@ -25,7 +25,7 @@ namespace contextual_notes
             client = new DocumentClient(new Uri(config["endpoint"]), config["authkey"]);
         }
 
-        public static async Task<string> GetAllDocsAsync<T>(string collection)
+        public static async Task<string> GetAllDocs<T>(string collection)
         {
             var q = client.CreateDocumentQuery<T>(UriFactory.CreateDocumentCollectionUri(config["database"], collection), new FeedOptions { MaxItemCount = -1, EnableCrossPartitionQuery = true })
                 .Select(item => item)
@@ -89,19 +89,20 @@ namespace contextual_notes
 
         public static async void CreateDocument<T>(T item, string collectionName) where T : Item
         {
-            await client.CreateDocumentAsync((UriFactory.CreateDocumentCollectionUri(config["database"], collectionName)), item);
+            await client.CreateDocumentAsync((GetCollectionUri(collectionName)), item);
         }
 
         public static string Search<T>(string collectionName, string searchTerms, string searchText)
         {
             FeedOptions queryOptions = new FeedOptions { MaxItemCount = -1, EnableCrossPartitionQuery = true };
 
-            var terms = searchTerms.Split(' ');
-            var secondClause = string.Format(" OR CONTAINS({0}.{1}, @{1})", collectionName, terms[1].ToLower());
+            var terms = searchTerms.Trim().Split(' ');
+            var contains = terms.Select(x => string.Format("CONTAINS({0}, @{1})", x == "keywords" ? "k.name" : "item." + x, x)).ToArray();
+                         
 
             var q = new SqlQuerySpec
             {
-                QueryText = string.Format("SELECT * FROM {0} WHERE CONTAINS({0}.{1}, @{1})", collectionName, terms[0].ToLower()),
+                QueryText = "SELECT VALUE item FROM item JOIN k IN item.keywords WHERE " + contains[0],
                 Parameters = new SqlParameterCollection()
                 {
                     new SqlParameter("@" + terms[0].ToLower(), searchText)
@@ -109,19 +110,21 @@ namespace contextual_notes
                 }
             };
 
-            if (!string.IsNullOrEmpty(terms[1]))
+            if (terms.Length > 2 && contains.Length > 2)
             {
                 q.Parameters.Add(new SqlParameter("@" + terms[1], searchText));
-                q.QueryText += secondClause;
+                q.QueryText += " OR " + contains[1];
             }
 
             List<T> queryResult = (client.CreateDocumentQuery<T>(
-                     UriFactory.CreateDocumentCollectionUri(config["database"], collectionName),
+                     GetCollectionUri(collectionName),
                      q,
                      queryOptions)).ToList();
 
             return JsonConvert.SerializeObject(queryResult);
         }
+
+
 
         public static async void DeleteDocument(string id, string collectionName)
         {
@@ -140,7 +143,7 @@ namespace contextual_notes
 
         public static Document GetDocument(string id, string collectionName)
         {
-            var doc = client.CreateDocumentQuery<Document>(UriFactory.CreateDocumentCollectionUri(config["database"], collectionName), new FeedOptions { EnableCrossPartitionQuery = true })
+            var doc = client.CreateDocumentQuery<Document>(GetCollectionUri(collectionName), new FeedOptions { EnableCrossPartitionQuery = true })
                                         .Where(r => r.Id == id)
                                         .AsEnumerable()
                                         .SingleOrDefault();
@@ -149,7 +152,7 @@ namespace contextual_notes
 
         public static T GetDocumentItem<T>(string id, string collectionName) where T : Item
         {
-            var docItem = client.CreateDocumentQuery<T>(UriFactory.CreateDocumentCollectionUri(config["database"], collectionName), new FeedOptions { EnableCrossPartitionQuery = true })
+            var docItem = client.CreateDocumentQuery<T>(GetCollectionUri(collectionName), new FeedOptions { EnableCrossPartitionQuery = true })
                                         .Where(r => r.Id == id)
                                         .AsEnumerable()
                                         .SingleOrDefault();
@@ -172,6 +175,11 @@ namespace contextual_notes
                 { "authkey", configBuilder.GetConnectionString("authkey") },
                 { "endpoint", configBuilder.GetConnectionString("endpoint") }
             };
+        }
+
+        public static Uri GetCollectionUri(string collectionName)
+        {
+            return UriFactory.CreateDocumentCollectionUri(config["database"], collectionName);
         }
 
         private async static Task CreateDB()
