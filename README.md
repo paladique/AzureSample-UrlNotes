@@ -1,7 +1,7 @@
 # Url Notes
 ASP.NET Web application that uses Azure Cosmos DB to manage favorite docs and videos, with the ability to add personal notes for each individual url.
 
-[View the blog post here]( https://blogs.msdn.microsoft.com/webdev/)
+[View the blog post here](https://blogs.msdn.microsoft.com/webdev/2018/04/27/cosmos-db-solves-common-data-challenges/?WT.mc_id=codesamples-cosmosdb-jasmineg)
 
 [Try Cosmos DB](https://azure.microsoft.com/en-us/try/cosmosdb/?utm_source=github&utm_medium=github-sample-cosmos-link)
 
