@@ -1,4 +1,4 @@
-﻿using contextual_notes.Models;
+﻿using UrlNotes.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Newtonsoft.Json;
@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 
 
-namespace contextual_notes.Pages
+namespace UrlNotes.Pages
 {
     public class IndexModel : PageModel
     {

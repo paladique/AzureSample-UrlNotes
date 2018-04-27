@@ -7,11 +7,11 @@ using Microsoft.Azure.Documents.Client;
 using Microsoft.Azure.Documents.Linq;
 using Newtonsoft.Json;
 using Microsoft.Azure.Documents;
-using contextual_notes.Models;
+using UrlNotes.Models;
 using Microsoft.Extensions.Configuration;
 using System.IO;
 
-namespace contextual_notes
+namespace UrlNotes
 {
     public static class DocumentDBRepository
     {
@@ -25,9 +25,9 @@ namespace contextual_notes
             client = new DocumentClient(new Uri(config["endpoint"]), config["authkey"]);
         }
 
-        public static async Task<string> GetAllDocs<T>(string collection)
+        public static async Task<string> GetAllDocs<T>(string collectionName)
         {
-            var q = client.CreateDocumentQuery<T>(UriFactory.CreateDocumentCollectionUri(config["database"], collection), new FeedOptions { MaxItemCount = -1, EnableCrossPartitionQuery = true })
+            var q = client.CreateDocumentQuery<T>(GetCollectionUri(collectionName), new FeedOptions { MaxItemCount = -1, EnableCrossPartitionQuery = true })
                 .Select(item => item)
                 .AsDocumentQuery();
 

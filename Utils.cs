@@ -1,9 +1,9 @@
 ﻿using HtmlAgilityPack;
 using System.Linq;
-using contextual_notes.Models;
+using UrlNotes.Models;
 using System;
 
-namespace contextual_notes
+namespace UrlNotes
 {
     public class Utils
     {

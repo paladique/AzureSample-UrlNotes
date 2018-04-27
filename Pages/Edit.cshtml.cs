@@ -5,10 +5,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using contextual_notes.Models;
+using UrlNotes.Models;
 
 
-namespace contextual_notes.Pages
+namespace UrlNotes.Pages
 {
     public class EditModel : PageModel
     {
