@@ -129,7 +129,7 @@ namespace UrlNotes
         public static async void DeleteDocument(string id, string collectionName)
         {
             var doc = GetDocumentItem<Item>(id, collectionName);
-            await client.DeleteDocumentAsync(UriFactory.CreateDocumentUri(config["database"], collectionName, id), new RequestOptions { PartitionKey = new PartitionKey(doc.Name) });
+            await client.DeleteDocumentAsync(UriFactory.CreateDocumentUri(config["database"], collectionName, id));
         }
 
         public static async void EditDocument(Item item, string collectionName)
@@ -138,7 +138,7 @@ namespace UrlNotes
             doc.SetPropertyValue("notes", item.Notes);
             doc.SetPropertyValue("tutorial", item.IsTutorial);
 
-            Document updated = await client.ReplaceDocumentAsync(doc, new RequestOptions { PartitionKey = new PartitionKey(doc.GetPropertyValue<string>("name")) });
+            Document updated = await client.ReplaceDocumentAsync(doc);
         }
 
         public static Document GetDocument(string id, string collectionName)
