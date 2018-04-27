@@ -14,6 +14,6 @@ ASP.NET Web application that uses Azure Cosmos DB to manage favorite docs and vi
 
 ## How to run
 1. [Create a Cosmos DB Database](https://docs.microsoft.com/en-us/azure/cosmos-db/create-sql-api-dotnet#create-a-database-account?WT.mc_id=codesamples-cosmosdb-jasmineg)
-1. Open project in favorite editor of choice. 
+1. Open project in favorite editor or IDE of choice. 
 1. Open `appsettings.json`, copy auth key and url endpoint from Cosmos DB in the Azure Portal, replace placeholders with those values.
-1. Build and run. (use `dotnet run` on the command line in project root)
+1. Build and run. (Non VS users: use `dotnet run` on the command line in project root)
